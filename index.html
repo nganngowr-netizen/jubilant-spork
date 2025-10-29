@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV (React) – Nguyễn Kim Hà Ngân</title>
+    <meta name="description" content="Trang CV cá nhân của Nguyễn Kim Hà Ngân - sinh viên ngành Công nghệ Vật lý Điện tử và Tin học." />
+    <link rel="stylesheet" href="styles.css" />
+    <!-- React 18 + ReactDOM 18 via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel để dùng JSX trực tiếp (phục vụ bài thực hành) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="light">
+    <div id="app"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      const Tag = ({ children }) => <span className="tag">{children}</span>;
+      const Section = ({ title, children }) => (
+        <section className="block">
+          <h2>{title}</h2>
+          <div>{children}</div>
+        </section>
+      );
+
+      const Header = ({ profile, onToggleTheme, theme, onPrint }) => (
+        <header className="header">
+          <div className="avatar">
+            {/* Đặt file ảnh cùng thư mục và tên 'avt.jpg' để hiển thị */}
+            <img src="avt.jpg" alt="Ảnh đại diện" />
+          </div>
+          <div className="who">
+            <h1>{profile.name}</h1>
+            <p className="role">{profile.role}</p>
+            <p className="meta">
+              <a href={"mailto:" + profile.email}>{profile.email}</a> ·{" "}
+              <a href={profile.github} target="_blank" rel="noreferrer">{profile.github}</a>
+            </p>
+            <p className="location">{profile.location}</p>
+            <div className="actions">
+              <button onClick={onToggleTheme}>{theme === "light" ? "Dark mode" : "Light mode"}</button>
+              <button onClick={onPrint}>Tải PDF</button>
+            </div>
+          </div>
+        </header>
+      );
+
+      const ExperienceItem = ({ when, title, org, bullets }) => (
+        <article className="item">
+          <div className="when">{when}</div>
+          <div className="what">
+            <h3>{title}</h3>
+            {org && <p className="org">{org}</p>}
+            {bullets && <ul>{bullets.map((b, i) => <li key={i}>{b}</li>)}</ul>}
+          </div>
+        </article>
+      );
+
+      function App() {
+        const [theme, setTheme] = useState("light");
+        const profile = {
+          name: "Nguyễn Kim Hà Ngân",
+          role: "Công nghệ Vật lý Điện tử và Tin học · Student",
+          email: "nganngowr@gmail.com",
+          github: "https://github.com/nganngowr-netizen",
+          location: "TP.HCM, Việt Nam"
+        };
+
+        const summary = "Sinh viên công nghệ yêu thích web/app; ham học và có kỷ luật trong nhóm.";
+
+        const skills = ["HTML", "CSS", "JavaScript", "Git/GitHub", "C/C++", "Python"];
+
+        const experiences = [
+          {
+            when: "2022",
+            title: "Thành viên CLB học thuật NES",
+            org: "Trường Đại học Khoa học tự nhiên, ĐHQG-HCM",
+            bullets: ["Trực thuộc Mảng Điện tử."]
+          },
+          {
+            when: "2022–Nay",
+            title: "Phó Bí thư Chi đoàn 22CVD1",
+            org: "Trường Đại học Khoa học tự nhiên, ĐHQG-HCM",
+            bullets: ["Kỹ năng lãnh đạo và phối hợp trong công việc tốt."]
+          }
+        ];
+
+        const education = [
+          {
+            when: "2022–2026",
+            title: "Cử nhân (dự kiến)",
+            org: "Trường Đại học Khoa học tự nhiên, ĐHQG-HCM",
+            bullets: ["Môn nổi bật: Cấu trúc dữ liệu, Lập trình web, Cơ sở dữ liệu."]
+          }
+        ];
+
+        const certificates = ["VSTEP Bậc 4"];
+        const hobbies = ["Chụp ảnh, đọc sách, ca hát"];
+
+        const toggleTheme = () => {
+          const next = theme === "light" ? "dark" : "light";
+          setTheme(next);
+          document.body.className = next;
+        };
+        const handlePrint = () => window.print();
+
+        return (
+          <div className="container">
+            <Header profile={profile} onToggleTheme={toggleTheme} theme={theme} onPrint={handlePrint} />
+
+            <Section title="Tóm tắt">
+              <p>{summary}</p>
+            </Section>
+
+            <Section title="Kỹ năng">
+              <div className="tags">{skills.map((s,i)=><Tag key={i}>{s}</Tag>)}</div>
+            </Section>
+
+            <Section title="Kinh nghiệm / Hoạt động">
+              {experiences.map((e,i)=><ExperienceItem key={i} {...e} />)}
+            </Section>
+
+            <Section title="Học vấn">
+              {education.map((e,i)=><ExperienceItem key={i} {...e} />)}
+            </Section>
+
+            <section className="two-col">
+              <div>
+                <h2>Chứng chỉ</h2>
+                <ul>{certificates.map((c,i)=><li key={i}>{c}</li>)}</ul>
+              </div>
+              <div>
+                <h2>Sở thích</h2>
+                <ul>{hobbies.map((h,i)=><li key={i}>{h}</li>)}</ul>
+              </div>
+            </section>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+    </script>
+  </body>
+</html>
